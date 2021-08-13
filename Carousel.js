@@ -9,8 +9,6 @@ class Carousel extends HTMLElement {
         this._scrollRight = this._scrollRight.bind(this);
         this._scrollLeft = this._scrollLeft.bind(this);
 
-        this._getCarouselContainerWidth = this._getCarouselContainerWidth.bind(this);
-
         this._itemsDisplayed = this.getAttribute('items-displayed') ?? 2;
         
         this.shadowRoot.innerHTML = `
@@ -37,7 +35,6 @@ class Carousel extends HTMLElement {
         this._carousel = this.shadowRoot.getElementById('carousel');
 
         this._setFixedCarouselWidth();
-        // this._setFixedCarouselContainerWidth();
         this._addEventListeners();
     }
     disconnectedCallback(){
@@ -54,9 +51,6 @@ class Carousel extends HTMLElement {
         for(let i = 0; i < length; i++){
             this.firstElementChild.remove();
         }
-    }
-    _setFixedCarouselContainerWidth(){
-        this.shadowRoot.getElementById('carousel-container').style.width = `${this._getCarouselContainerWidth()}px`;
     }
     _setFixedCarouselWidth(){
         this._carousel.style.width = `${this._getCarouselWidth()}px`;
@@ -83,15 +77,6 @@ class Carousel extends HTMLElement {
     _scrollLeft(){
         const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth - this._gap);
         this._scroll(Math.max(0, new_position));
-    }
-    _getCarouselContainerWidth(){
-        let width = 0;
-        const { children } = this.shadowRoot.getElementById('carousel-container');
-        for(let child of children){
-            width += child.offsetWidth;
-        }
-        width -= 50+(this._itemsDisplayed-1*20);
-        return width;
     }
     _getCarouselWidth(){
         let width = 0;
