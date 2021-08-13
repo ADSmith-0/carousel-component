@@ -19,7 +19,7 @@ class Carousel extends HTMLElement {
             </section>
         `;
 
-        this._gap = 15;
+        this._gap = 10;
 
         this._addLightDOMChildrenToNode('carousel');
         this._removeChildrenFromLightDOM();
@@ -71,19 +71,19 @@ class Carousel extends HTMLElement {
         });
     }
     _scrollRight(){
-        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth - this._gap);
+        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth + this._gap - 15);
         this._scroll(Math.min(new_position, this._carousel.scrollWidth));
     }
     _scrollLeft(){
-        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth - this._gap);
+        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth + this._gap - 15);
         this._scroll(Math.max(0, new_position));
     }
     _getCarouselWidth(){
         let width = 0;
         for(let i = 0; i < this._itemsDisplayed; i++){
             width += parseInt(this._carousel.children[i].offsetWidth);
-            if(i !== 0) width += this._gap; //for gap
         }
+        width += (this._itemsDisplayed * this._gap);
         return width;
     }
     _getCSS(){
@@ -108,7 +108,7 @@ class Carousel extends HTMLElement {
                 justify-content: start;
                 gap: ${this._gap+5}px;
                 align-items: center;
-                padding: 0 20px;
+                padding: 0 10px;
                 scroll-behavior: smooth;
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
