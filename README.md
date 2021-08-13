@@ -1,7 +1,6 @@
 # Carousel Component
 ## Made with the Web Components API
 Example usage:
-`
 <my-carousel items-displayed=2>
     <div class="card">Hello1</div>
     <div class="card">Hello2</div>
@@ -10,4 +9,3 @@ Example usage:
     <div class="card">Hello5</div>
     <div class="card">Hello6</div>
 </my-carousel>
-`
