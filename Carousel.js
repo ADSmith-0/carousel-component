@@ -20,6 +20,7 @@ class Carousel extends HTMLElement {
         `;
 
         this._gap = 10;
+        this._padding = 10;
 
         this._addLightDOMChildrenToNode('carousel');
         this._removeChildrenFromLightDOM();
@@ -71,11 +72,11 @@ class Carousel extends HTMLElement {
         });
     }
     _scrollRight(){
-        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth + this._gap - 15);
+        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth-(this._padding*2)) + this._gap;
         this._scroll(Math.min(new_position, this._carousel.scrollWidth));
     }
     _scrollLeft(){
-        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth + this._gap - 15);
+        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth-(this._padding*2)) + this._gap;
         this._scroll(Math.max(0, new_position));
     }
     _getCarouselWidth(){
@@ -83,7 +84,8 @@ class Carousel extends HTMLElement {
         for(let i = 0; i < this._itemsDisplayed; i++){
             width += parseInt(this._carousel.children[i].offsetWidth);
         }
-        width += (this._itemsDisplayed-1 * this._gap);
+        width += ((this._itemsDisplayed-1) * this._gap);
+        // width += this._gap/2;
         return width;
     }
     _getCSS(){
@@ -106,8 +108,9 @@ class Carousel extends HTMLElement {
                 flex-direction: row;
                 overflow-x: scroll;
                 justify-content: start;
+                gap: ${this._gap}px;
                 align-items: center;
-                padding: 0 10px;
+                padding: 0 ${this._padding}px;
                 scroll-behavior: smooth;
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
@@ -117,6 +120,7 @@ class Carousel extends HTMLElement {
                 height: 200px;
                 min-width: 200px;
                 border: 1px solid #999;
+                box-sizing: border-box;
             }
         `;
     }
