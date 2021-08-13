@@ -83,7 +83,7 @@ class Carousel extends HTMLElement {
         for(let i = 0; i < this._itemsDisplayed; i++){
             width += parseInt(this._carousel.children[i].offsetWidth);
         }
-        width += (this._itemsDisplayed * this._gap);
+        width += (this._itemsDisplayed-1 * this._gap);
         return width;
     }
     _getCSS(){
@@ -106,7 +106,6 @@ class Carousel extends HTMLElement {
                 flex-direction: row;
                 overflow-x: scroll;
                 justify-content: start;
-                gap: ${this._gap+5}px;
                 align-items: center;
                 padding: 0 10px;
                 scroll-behavior: smooth;
