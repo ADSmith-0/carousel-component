@@ -1,7 +1,7 @@
 # Carousel Component
 ## Made with the Web Components API
 Example usage:
-```
+```HTML
 <my-carousel items-displayed=2>
     <div class="card">Hello1</div>
     <div class="card">Hello2</div>
