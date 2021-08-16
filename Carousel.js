@@ -32,7 +32,6 @@ class Carousel extends HTMLElement {
             ${this.shadowRoot.innerHTML}
             <style>
                 ${this._getCSS()}
-                ${this._cardCSS}
             </style>
         `;
 
@@ -43,13 +42,14 @@ class Carousel extends HTMLElement {
     disconnectedCallback(){
         this._removeEventListeners();
     }
+    _returnExistingCSS(){
+
+    }
     _addLightDOMChildrenToNode(id){
         const node = this.shadowRoot.getElementById(id);
         for(let child of this.children){
             node.appendChild(child.cloneNode(true));
         }
-        this.firstElementChild.style = window.getComputedStyle(this.firstElementChild);
-        console.log(window.getComputedStyle(this.firstElementChild));
     }
     _removeChildrenFromLightDOM(){
         const length = this.children.length;
@@ -127,7 +127,7 @@ class Carousel extends HTMLElement {
             #carousel::-webkit-scrollbar { display: none; }
             ${!!this.getAttribute('card-css') && this.getAttribute('card-css')}
             .card {
-                min-width: calc(33.3333% - ${this._gap*0.666667}px);
+                min-width: calc(33.3333% - ${this._gap*0.86667}px);
             }
         `;
     }
