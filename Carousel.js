@@ -12,6 +12,7 @@ class Carousel extends HTMLElement {
         this._itemsDisplayed = this.getAttribute('items-displayed') ?? 2;
 
         this._numberOfCardsInCarousel = this._numberOfCardsInCarousel.bind(this);
+        this._newPosition = this._newPosition.bind(this);
         
         this.shadowRoot.innerHTML = `
             <section id="carousel-container">
@@ -22,7 +23,6 @@ class Carousel extends HTMLElement {
         `;
 
         this._gap = 10;
-        this._padding = 5;
 
         this._addLightDOMChildrenToNode('carousel');
         this._removeChildrenFromLightDOM();
@@ -75,12 +75,20 @@ class Carousel extends HTMLElement {
             behavior: 'smooth'
         });
     }
+    _newPosition(direction){
+        const amount = this._carousel.offsetWidth + this._gap;
+        if(direction === "left"){
+            return this._carousel.scrollLeft - amount;
+        }else{
+            return this._carousel.scrollLeft + amount;
+        }
+    }
     _scrollRight(){
-        const new_position = this._carousel.scrollLeft + this._carousel.offsetWidth;
+        const new_position = this._newPosition("right");
         this._scroll(Math.min(new_position, this._carousel.scrollWidth));
     }
     _scrollLeft(){
-        const new_position = this._carousel.scrollLeft - this._carousel.offsetWidth;
+        const new_position = this._newPosition("left");
         this._scroll(Math.max(0, new_position));
     }
     _numberOfCardsInCarousel(){
@@ -106,20 +114,16 @@ class Carousel extends HTMLElement {
                 display: flex;
                 flex-direction: row;
                 overflow-x: scroll;
-                justify-content: start;
                 gap: ${this._gap}px;
                 align-items: center;
-                scroll-behavior: smooth;
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
-                box-sizing: border-box;
-                width: 95%;
+                width: 97.5%;
                 margin: auto;
             }
             #carousel::-webkit-scrollbar { display: none; }
             .card {
-                min-width: calc(33.3% - 9.6666667px);
-                // min-width: 33% - ${this._gap};
+                min-width: calc(33.3333% - ${this._gap*0.666667}px);
                 height: 300px;
                 border: 1px solid #999;
                 box-sizing: border-box;
