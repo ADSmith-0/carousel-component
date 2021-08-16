@@ -22,7 +22,7 @@ class Carousel extends HTMLElement {
             </section>
         `;
 
-        this._gap = 10;
+        this._gap = 20;
 
         this._addLightDOMChildrenToNode('carousel');
         this._removeChildrenFromLightDOM();
@@ -42,9 +42,6 @@ class Carousel extends HTMLElement {
     disconnectedCallback(){
         this._removeEventListeners();
     }
-    _returnExistingCSS(){
-
-    }
     _addLightDOMChildrenToNode(id){
         const node = this.shadowRoot.getElementById(id);
         for(let child of this.children){
@@ -57,12 +54,6 @@ class Carousel extends HTMLElement {
             this.firstElementChild.remove();
         }
     }
-    _setFixedCarouselWidth(){
-        this._carousel.style.width = `${this._getCarouselWidth()}px`;
-    }
-    _setFixedCarouselContainerWidth(){
-        this.shadowRoot.getElementById('carousel-container').style.width = `${this._getCarouselContainerWidth}px`;
-    }
     _addEventListeners(){
         this.shadowRoot.getElementById('btn-left').addEventListener('click', this._scrollLeft);
         this.shadowRoot.getElementById('btn-right').addEventListener('click', this._scrollRight);
@@ -70,6 +61,10 @@ class Carousel extends HTMLElement {
     _removeEventListeners(){
         this.shadowRoot.getElementById('btn-left').removeEventListener('click', this._scrollLeft);
         this.shadowRoot.getElementById('btn-right').removeEventListener('click', this._scrollRight);
+    }
+    _getCardWidth(){
+        const count = (1/this._itemsDisplayed)*100;
+        return `${count}% - ${this._gap*0.454545}px`;
     }
     _scroll(left){
         this._carousel.scroll({
@@ -79,7 +74,7 @@ class Carousel extends HTMLElement {
         });
     }
     _newPosition(direction){
-        const amount = this._carousel.offsetWidth + this._gap;
+        const amount = this._carousel.offsetWidth;
         if(direction === "left"){
             return this._carousel.scrollLeft - amount;
         }else{
@@ -118,17 +113,19 @@ class Carousel extends HTMLElement {
                 flex-direction: row;
                 overflow-x: scroll;
                 gap: ${this._gap}px;
-                align-items: center;
+                padding: 20px ${this._gap}px;
+                box-sizing: border-box;
+                align-items: stretch;
                 -ms-overflow-style: none;  /* IE and Edge */
                 scrollbar-width: none;  /* Firefox */
                 width: 97.5%;
                 margin: auto;
             }
             #carousel::-webkit-scrollbar { display: none; }
-            ${!!this.getAttribute('card-css') && this.getAttribute('card-css')}
             .card {
-                min-width: calc(33.3333% - ${this._gap*0.86667}px);
+                min-width: calc(${this._getCardWidth()});
             }
+            ${!!this.getAttribute('card-css') && this.getAttribute('card-css')}
         `;
     }
 }
