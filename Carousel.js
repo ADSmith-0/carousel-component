@@ -8,7 +8,6 @@ class Carousel extends HTMLElement {
         this._scroll = this._scroll.bind(this);
         this._scrollRight = this._scrollRight.bind(this);
         this._scrollLeft = this._scrollLeft.bind(this);
-        this._setFixedCarouselContainerWidth = this._setFixedCarouselContainerWidth.bind(this);
 
         this._itemsDisplayed = this.getAttribute('items-displayed') ?? 2;
         
@@ -35,9 +34,7 @@ class Carousel extends HTMLElement {
         `;
 
         this._carousel = this.shadowRoot.getElementById('carousel');
-
-        this._setFixedCarouselWidth();
-        this._setFixedCarouselContainerWidth();
+        
         this._addEventListeners();
     }
     disconnectedCallback(){
@@ -77,34 +74,18 @@ class Carousel extends HTMLElement {
         });
     }
     _scrollRight(){
-        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth-(this._padding*2)) + this._gap;
+        const new_position = this._carousel.scrollLeft + (this._carousel.offsetWidth+this._gap-this._padding);
         this._scroll(Math.min(new_position, this._carousel.scrollWidth));
     }
     _scrollLeft(){
-        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth-(this._padding*2)) + this._gap;
+        const new_position = this._carousel.scrollLeft - (this._carousel.offsetWidth+this._gap-this._padding);
         this._scroll(Math.max(0, new_position));
-    }
-    _getCarouselWidth(){
-        let width = 0;
-        for(let i = 0; i < this._itemsDisplayed; i++){
-            width += parseInt(this._carousel.children[i].offsetWidth);
-        }
-        width += ((this._itemsDisplayed-1) * this._gap);
-        return width;
-    }
-    _getCarouselContainerWidth(){
-        let width = 0;
-        const { children } = this.shadowRoot.getElementById('carousel-container');
-        for(let child of children){
-            width += child.offsetWidth;
-        }
-        return width;
     }
     _getCSS(){
         return `
             #carousel-container {
                 position: relative;
-                width: auto;
+                // width: auto;
             }
             .btn {
                 position: absolute;
@@ -129,8 +110,7 @@ class Carousel extends HTMLElement {
             }
             #carousel::-webkit-scrollbar { display: none; }
             .card {
-                height: 200px;
-                min-width: 200px;
+                min-width: 33%;
                 border: 1px solid #999;
                 box-sizing: border-box;
             }
