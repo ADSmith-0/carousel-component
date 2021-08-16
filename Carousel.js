@@ -10,9 +10,12 @@ class Carousel extends HTMLElement {
         this._scrollLeft = this._scrollLeft.bind(this);
 
         this._itemsDisplayed = this.getAttribute('items-displayed') ?? 2;
+        this._mobileItemsDisplayed = this.getAttribute('mobile-items-displayed') ?? 1;
 
-        this._numberOfCardsInCarousel = this._numberOfCardsInCarousel.bind(this);
         this._newPosition = this._newPosition.bind(this);
+        this._getWidthBuffer = this._getWidthBuffer.bind(this);
+        this._getCardWidth = this._getCardWidth.bind(this);
+
         
         this.shadowRoot.innerHTML = `
             <section id="carousel-container">
@@ -62,9 +65,25 @@ class Carousel extends HTMLElement {
         this.shadowRoot.getElementById('btn-left').removeEventListener('click', this._scrollLeft);
         this.shadowRoot.getElementById('btn-right').removeEventListener('click', this._scrollRight);
     }
-    _getCardWidth(){
-        const count = (1/this._itemsDisplayed)*100;
-        return `${count}% - ${this._gap*0.454545}px`;
+    _getWidthBuffer(str){
+        const num = (str == "mobile") ? this._mobileItemsDisplayed : this._itemsDisplayed;
+        switch(parseInt(num)){
+            case 1:
+                return 0.1111;
+            case 2:
+                return 0.33333;
+            case 3:
+                return 0.454545;
+        }
+    }
+    _getCardWidth(str=""){
+        let count;
+        if(str==="mobile"){
+            count = (1/this._mobileItemsDisplayed)*100;
+        }else{
+            count = (1/this._itemsDisplayed)*100;
+        }
+        return `${count}% - ${this._getWidthBuffer(str)}px`;
     }
     _scroll(left){
         this._carousel.scroll({
@@ -89,9 +108,6 @@ class Carousel extends HTMLElement {
         const new_position = this._newPosition("left");
         this._scroll(Math.max(0, new_position));
     }
-    _numberOfCardsInCarousel(){
-        return this.shadowRoot.getElementById('carousel').childElementCount;
-    }
     _getCSS(){
         return `
             #carousel-container {
@@ -102,6 +118,12 @@ class Carousel extends HTMLElement {
             .btn {
                 position: absolute;
                 top: 45%;
+                color: #fff;
+                font-size: 28px;
+                background-color: #93003c;
+                border: none;
+                cursor: pointer;
+                z-index: 99;
             }
             #btn-left {
                 transform: rotateY(180deg);
@@ -124,6 +146,14 @@ class Carousel extends HTMLElement {
             #carousel::-webkit-scrollbar { display: none; }
             .card {
                 min-width: calc(${this._getCardWidth()});
+            }
+            @media(max-width: 600px){
+                #carousel {
+                    padding: 20px ${this._gap/2}px;
+                }
+                .card {
+                    min-width: calc(${this._getCardWidth("mobile")});
+                }
             }
             ${!!this.getAttribute('card-css') && this.getAttribute('card-css')}
         `;
