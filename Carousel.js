@@ -67,14 +67,19 @@ class Carousel extends HTMLElement {
     }
     _getWidthBuffer(str){
         const num = (str == "mobile") ? this._mobileItemsDisplayed : this._itemsDisplayed;
+        let coeff;
         switch(parseInt(num)){
             case 1:
-                return 0.1111;
+                coeff = 0.0011;
+                break;
             case 2:
-                return 0.33333;
+                coeff = 0.33333;
+                break;
             case 3:
-                return 0.454545;
+                coeff = 0.454545;
+                break;
         }
+        return this._gap*coeff;
     }
     _getCardWidth(str=""){
         let count;
@@ -123,7 +128,7 @@ class Carousel extends HTMLElement {
                 background-color: #93003c;
                 border: none;
                 cursor: pointer;
-                z-index: 99;
+                z-index: 9;
             }
             #btn-left {
                 transform: rotateY(180deg);
